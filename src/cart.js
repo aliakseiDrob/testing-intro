@@ -38,11 +38,27 @@ function changeQuantity(cart, id, quantity) {
 function removeFromCart(cart, id) {
   return cart.filter((item) => item.id !== id);
 }
+
 function calculateCartSubtotal(cart) {
   return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
-function calculateOrderTotal() {
-  return notImplemented();
+
+function calculateOrderTotal(cart, promo) {
+  const subtotal = calculateCartSubtotal(cart);
+
+  const discount =
+    promo === "SAVE10" && subtotal >= 20000
+      ? Math.floor(subtotal * 0.1)
+      : 0;
+
+  const delivery = subtotal >= 50000 ? 0 : 30000;
+
+  return {
+    subtotal,
+    discount,
+    delivery,
+    total: subtotal - discount + delivery,
+  };
 }
 
 const cartApi = {
