@@ -9,16 +9,32 @@ function addToCart(curt, product, quantity) {
 
   const productInCart = curt.find((element) => element.id === product.id);
   if (productInCart) {
-    productInCart.quantity = productInCart.quantity + quantity;
-  } else {
-    curt.push({ ...product, quantity });
+    return curt.map((item) =>
+      item.id === product.id
+        ? { ...item, quantity: item.quantity + quantity }
+        : item,
+    );
   }
-  return curt;
+
+  return [...curt, { ...product, quantity }];
 }
 
-function changeQuantity() {
-  return notImplemented();
+function changeQuantity(cart, id, quantity) {
+  const productInCart = cart.find((element) => element.id === id);
+
+  if (!productInCart) {
+    return cart;
+  }
+
+  if (quantity < 1 || productInCart.stock < quantity) {
+    throw RangeError(`Incorrect quantity: ${quantity}`);
+  }
+
+  return cart.map((item) =>
+    item.id === id ? { ...item, quantity: quantity } : item,
+  );
 }
+
 function removeFromCart(cart, id) {
   return cart.filter((item) => item.id !== id);
 }
